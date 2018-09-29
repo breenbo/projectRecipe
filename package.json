@@ -4,15 +4,18 @@
   "description": "udemy recipes webapp project",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "webpack --mode development",
+    "build": "webpack --mode production"
   },
   "repository": {
     "type": "git",
-    "url": ".git"
+    "url": "./.git"
   },
   "author": "Bruno Berrehuel",
   "license": "ISC",
   "devDependencies": {
-    "webpack": "^4.20.2"
+    "webpack": "^4.20.2",
+    "webpack-cli": "^3.1.2",
+    "webpack-dev-server": "^3.1.9"
   }
 }
