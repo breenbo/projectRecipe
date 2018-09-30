@@ -1,11 +1,11 @@
 // Global app controller
 import Search from './models/Search'
-import {elements} from './views/base'
+import {elements, renderLoader, clearLoader} from './views/base'
 // import all functions from the searchView file in an object
 import * as searchView from './views/searchView'
 
-/* 
-* GLOBAL STATE OF THE APP 
+/*
+* GLOBAL STATE OF THE APP
 * - Search object
 * - current recipe object
 * - shopping list object
@@ -25,11 +25,13 @@ const controlSearch = async () => {
     // 3. Prepare UI for results
     searchView.clearInput()
     searchView.clearResults()
+    renderLoader(elements.searchResult)
 
     // 4. Search for recipes
     await state.search.getResults()
 
     // 5. Display the result on UI
+    clearLoader()
     searchView.renderResults(state.search.results)
   }
 }
