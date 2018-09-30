@@ -236,7 +236,8 @@ body {
     padding: 1.5rem 3rem;
     transition: all .3s;
     border-right: 1px solid #fff;
-    text-decoration: none; }
+    text-decoration: none;
+    background-color: white;}
   .results__link:hover,
   .likes__link:hover {
     background-color: #F9F5F3;
