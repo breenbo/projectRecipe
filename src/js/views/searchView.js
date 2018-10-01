@@ -10,6 +10,7 @@ export const clearInput = () => {
 // clear the previous results : remove all html inside the ul
 export const clearResults = () => {
   elements.searchResultList.innerHTML = ''
+  elements.searchResultPage.innerHTML = ''
 }
 
 // shorten the titles
@@ -57,7 +58,50 @@ const renderRecipe = recipe => {
 
 // function to display the results in view
 // deal with the array of 30 recipes received after the AJAX call
-export const renderResults = recipes => {
+export const renderResults = (recipes, page = 1, resultsPerPage = 10) => {
+  // render list of recipes
+  // define start and end to display only resultsPerPage
+  const start = (page - 1) * resultsPerPage
+  const end = page * resultsPerPage
   // loop in array and apply renderRecipe in each element
-  recipes.forEach(renderRecipe)
+  // cut the array with slice between start and end
+  recipes.slice(start, end).forEach(renderRecipe)
+
+  // render the page buttons
+  renderButtons(page, recipes.length, resultsPerPage)
+}
+
+// create the button depending of type (prev or next)
+// use data-goto html
+const createButton = (page, type) => `
+  <button class="btn-inline results__btn--${type}" data-goto=${type === 'prev' ? page - 1 : page + 1}>
+      <span>Page ${type === 'prev' ? page - 1 : page + 1}</span>
+      <svg class="search__icon">
+          <use href="img/icons.svg#icon-triangle-${type === 'prev' ? 'left' : 'right'}"></use>
+      </svg>
+  </button>
+`
+
+// render the buttons to navigate between the pages
+export const renderButtons = (page, numberResults, resultsPerPage) => {
+  const pages = Math.ceil(numberResults / resultsPerPage)
+  // declare button with let for reassignment, and outside if because block scoped
+  let button
+  if (page === 1 && pages > 1) {
+    // Only next button
+    button = createButton(page, 'next')
+  } else if (page < pages) {
+    // Both button
+    // create a string with the both buttons (html IS a string)
+    button = `
+      ${createButton(page, 'prev')}
+      ${createButton(page, 'next')}
+    `
+  } else if (page === pages && pages > 1) {
+    // Only prev button
+    button = createButton(page, 'prev')
+  }
+
+  // add button to the page
+  elements.searchResultPage.insertAdjacentHTML('afterbegin', button)
 }

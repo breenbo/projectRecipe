@@ -42,3 +42,17 @@ elements.searchForm.addEventListener('submit', e => {
   e.preventDefault()
   controlSearch()
 })
+
+// iot have click event on buttons (that don't exist yet), have to use event delegation
+elements.searchResultPage.addEventListener('click', e => {
+  // use the closest method to deal with click on arrow, or text, or div of the button
+  // use e.target iot know where the click happens
+  const btn = e.target.closest('.btn-inline')
+  if (btn) {
+    const goToPage = parseInt(btn.dataset.goto, 10)
+    // clear the former results
+    searchView.clearResults()
+    // render the new page (nmr goToPage)
+    searchView.renderResults(state.search.results, goToPage)
+  }
+})
