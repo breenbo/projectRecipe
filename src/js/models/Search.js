@@ -1,4 +1,6 @@
 import axios from 'axios'
+import {key} from '../config'
+
 // export the result of the search value with class
 export default class Search {
   // define the class with a constructor
@@ -7,8 +9,6 @@ export default class Search {
   }
   // use a method to have the results for the search
   async getResults () {
-    // save the API key in a const
-    const key = 'ce49a58b7aab9e3b80798d934918baf2'
     // use try (for success) catch (for error) with the async fonction
     try {
       // save the ajax request result in a const res with await, which return a promise
