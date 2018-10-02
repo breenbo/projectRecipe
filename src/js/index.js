@@ -31,12 +31,16 @@ const controlSearch = async () => {
     searchView.clearResults()
     renderLoader(elements.searchResult)
 
-    // 4. Search for recipes
-    await state.search.getResults()
-
-    // 5. Display the result on UI
-    clearLoader()
-    searchView.renderResults(state.search.results)
+    try {
+      // 4. Search for recipes
+      await state.search.getResults()
+      // 5. Display the result on UI
+      clearLoader()
+      searchView.renderResults(state.search.results)
+    } catch (err) {
+      alert ('Someting wrong with the search')
+      clearLoader()
+    }
   }
 }
 
@@ -64,6 +68,28 @@ elements.searchResultPage.addEventListener('click', e => {
 // ******************
 // RECIPE CONTROLLER
 // ******************
-const r = new Recipe(46956)
-r.getRecipe()
-console.log(r)
+// add even to the global object, when hash change
+const controlRecipe = async () => {
+  // get the existing hash from the url
+  const id = window.location.hash.replace('#', '') // window.location is the entire url
+  if (id) {
+    // prepare the UI for changes
+    // create the new recipes
+    state.recipe = new Recipe(id)
+    try {
+      // get recipe data 
+      await state.recipe.getRecipe()
+      // calculate time and servings
+      state.recipe.calcTime()
+      state.recipe.calcServing()
+      // render recipe
+      console.log(state.recipe)
+    } catch (err) {
+      alert('Error processing recipe')
+    }
+  }
+}
+
+// deal recipe on hashchange and page load
+// add mutliple event to the same object :
+['hashchange', 'load'].forEach(event => window.addEventListener(event, controlRecipe))

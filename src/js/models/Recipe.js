@@ -15,6 +15,25 @@ export default class Recipe {
       this.ingredients = res.data.recipe.ingredients
     } catch (error) {
       console.log(error)
+      alert('Something went wrong :(')
     }
+  }
+
+  calcTime () {
+    // assuming need 5 minutes for each ingredients to be prepared
+    this.time = this.ingredients.length * 5
+  }
+
+  calcServing () {
+    this.servings = 4
+  }
+
+  parseIngredients () {
+    const newIngredients = this.ingredient.map(el => {
+      // 1. uniforms units
+      // 2. Remove parnthese
+      // 3. parse ingredient into count, unit and ingredient
+    })
+    this.ingredients = newIngredients
   }
 }
