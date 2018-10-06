@@ -36,7 +36,7 @@ export const limitRecipeTitle = (title, limit = 17) => {
   return title
 }
 
-// render only one recipe - no need to export outside de view module
+// render only one recipe - no need to export outside the view module
 const renderRecipe = recipe => {
   // use template string to create the html for the recipe
   const markup = `

@@ -4,6 +4,7 @@ import Recipe from './models/Recipe'
 import {elements, renderLoader, clearLoader} from './views/base'
 // import all functions from the searchView file in an object
 import * as searchView from './views/searchView'
+import * as recipeView from './views/recipeView'
 
 /*
 * GLOBAL STATE OF THE APP
@@ -74,17 +75,20 @@ const controlRecipe = async () => {
   const id = window.location.hash.replace('#', '') // window.location is the entire url
   if (id) {
     // prepare the UI for changes
+    recipeView.clearRecipe()
+    renderLoader(elements.recipe)
     // create the new recipes
     state.recipe = new Recipe(id)
     try {
       // get recipe data and parse ingredients
       await state.recipe.getRecipe()
-      console.log(state.recipe.ingredients)
       state.recipe.parseIngredients()
-      console.log(state.recipe.ingredients)
       // calculate time and servings
       state.recipe.calcTime()
       state.recipe.calcServing()
+      // render the main recipe
+      clearLoader();
+      recipeView.renderRecipe(state.recipe)
     } catch (err) {
       alert('Error processing recipe')
     }

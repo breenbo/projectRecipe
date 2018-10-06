@@ -31,7 +31,7 @@ export default class Recipe {
   parseIngredients () {
     const unitsLong = ['tablespoons', 'tablespoon', 'ounces', 'ounce', 'teaspoons', 'teaspoon', 'cups', 'pounds']
     const unitsShort = ['tblsp', 'tblsp', 'oz', 'oz', 'tsp', 'tsp', 'cup', 'pound']
-    // apply following to each element of the ingredients array
+    const units = [...unitsShort, 'kg', 'g']
     const newIngredients = this.ingredients.map(el => {
       // 1. uniforms units
       let ingredient = el.toLowerCase()
@@ -46,7 +46,7 @@ export default class Recipe {
       const arrIng = ingredient.split(' ')
       // search the index of the units in the new array
       // for each element of ArrIng, search if it includes a short unit
-      const unitIndex = arrIng.findIndex(el2 => unitsShort.includes(el2))
+      const unitIndex = arrIng.findIndex(el2 => units.includes(el2))
 
       // need to define object outside the block because it's block scoped
       let objIng
