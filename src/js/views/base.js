@@ -7,7 +7,8 @@ export const elements = {
   searchResult: document.getElementById('results'),
   searchResultList: document.getElementById('results__list'),
   searchResultPage: document.getElementById('results__pages'),
-  recipe: document.getElementById('recipe')
+  recipe: document.getElementById('recipe'),
+  shopping: document.getElementById('shopping__list')
 }
 
 export const elementStrings = {

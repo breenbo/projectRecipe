@@ -1,10 +1,12 @@
 // Global app controller
 import Search from './models/Search'
 import Recipe from './models/Recipe'
+import List from './models/List'
 import {elements, renderLoader, clearLoader} from './views/base'
 // import all functions from the searchView file in an object
 import * as searchView from './views/searchView'
 import * as recipeView from './views/recipeView'
+import * as listView from './views/listView'
 
 /*
 * GLOBAL STATE OF THE APP
@@ -14,6 +16,7 @@ import * as recipeView from './views/recipeView'
 * - liked recipes object
 */
 let state = {}
+window.state = state
 
 // ******************
 // SEARCH CONTROLLER
@@ -77,6 +80,8 @@ const controlRecipe = async () => {
     // prepare the UI for changes
     recipeView.clearRecipe()
     renderLoader(elements.recipe)
+    // highlight selected search item
+    if (state.search) searchView.highlightSelected(id)
     // create the new recipes
     state.recipe = new Recipe(id)
     try {
@@ -87,7 +92,7 @@ const controlRecipe = async () => {
       state.recipe.calcTime()
       state.recipe.calcServing()
       // render the main recipe
-      clearLoader();
+      clearLoader()
       recipeView.renderRecipe(state.recipe)
     } catch (err) {
       alert('Error processing recipe')
@@ -98,3 +103,56 @@ const controlRecipe = async () => {
 // deal recipe on hashchange and page load
 // add mutliple event to the same object :
 ['hashchange', 'load'].forEach(event => window.addEventListener(event, controlRecipe))
+
+// ******************
+// LIST CONTROLLER
+// ******************
+const controlList = () => {
+  // create a new list if none exists
+  // initialize an empty list
+  if (!state.list) state.list = new List()
+  // add each ingredient to the list and to the UI
+  state.recipe.ingredients.forEach(el => {
+    const item = state.list.addItem(el.count, el.unit, el.ingredient)
+    listView.renderItem(item)
+  })
+}
+
+// handle delete and update list items events
+elements.shopping.addEventListener('click', e => {
+  // get the id of the ingredient of the clicked element
+  const id = e.target.closest('.shopping__item').dataset.itemid
+  // handle the delete button
+  if (e.target.matches('.shopping__delete, .shopping__delete *')) {
+    // delete from state
+    state.list.deleteItem(id)
+    // delete from UI
+    listView.deleteItem(id)
+  // handle the count update
+  } else if (e.target.matches('.shopping__count-value')) {
+    const val = parseFloat(e.target.value, 10)
+    state.list.updateCount(id, val)
+  }
+})
+
+// use event delegation on the +/- buttons because the element don't exist yet
+// check the target of the click event
+elements.recipe.addEventListener('click', e => {
+  // match btn or all of its child element
+  if (e.target.matches('.btn-decrease, .btn-decrease *')) {
+    // decrease button is clicked
+    if (state.recipe.servings > 1) {
+      state.recipe.updateServings('dec')
+      recipeView.updateServingsIngredients(state.recipe)
+    }
+  } else if (e.target.matches('.btn-increase, .btn-increase *')) {
+    // increase button is clicked
+    state.recipe.updateServings('inc')
+    recipeView.updateServingsIngredients(state.recipe)
+  } else if (e.target.matches('.recipe__btn--add, .recipe__btn--add *')) {
+    controlList()
+  }
+})
+
+// TESTING
+window.l = new List()

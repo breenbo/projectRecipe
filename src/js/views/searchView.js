@@ -13,6 +13,16 @@ export const clearResults = () => {
   elements.searchResultPage.innerHTML = ''
 }
 
+// highlight the selected recipe in the search column
+export const highlightSelected = id => {
+  // cool trick to remove a class from a getElementByClassName results
+  const resultArr = Array.from(document.getElementsByClassName('results__link'))
+  resultArr.forEach(el => {
+    el.classList.remove('results__link--active')
+  })
+  document.querySelector(`.results__link[href*='${id}']`).classList.add('results__link--active')
+}
+
 // shorten the titles
 /*
 * 'Pasta with tomato sauce'
