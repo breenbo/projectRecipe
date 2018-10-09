@@ -8,7 +8,9 @@ export const elements = {
   searchResultList: document.getElementById('results__list'),
   searchResultPage: document.getElementById('results__pages'),
   recipe: document.getElementById('recipe'),
-  shopping: document.getElementById('shopping__list')
+  shopping: document.getElementById('shopping__list'),
+  likesMenu: document.getElementById('likes__field'),
+  likesList: document.getElementById('likes__list')
 }
 
 export const elementStrings = {

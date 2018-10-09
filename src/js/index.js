@@ -2,11 +2,13 @@
 import Search from './models/Search'
 import Recipe from './models/Recipe'
 import List from './models/List'
+import Likes from './models/Likes'
 import {elements, renderLoader, clearLoader} from './views/base'
 // import all functions from the searchView file in an object
 import * as searchView from './views/searchView'
 import * as recipeView from './views/recipeView'
 import * as listView from './views/listView'
+import * as likeView from './views/likeView'
 
 /*
 * GLOBAL STATE OF THE APP
@@ -93,7 +95,10 @@ const controlRecipe = async () => {
       state.recipe.calcServing()
       // render the main recipe
       clearLoader()
-      recipeView.renderRecipe(state.recipe)
+      recipeView.renderRecipe(
+        state.recipe,
+        state.likes.isLiked(id)
+      )
     } catch (err) {
       alert('Error processing recipe')
     }
@@ -135,6 +140,41 @@ elements.shopping.addEventListener('click', e => {
   }
 })
 
+// ******************
+// LIKE CONTROLLER
+// ******************
+// TESTING
+state.likes = new Likes()
+
+const controlLike = () => {
+  if (!state.likes) state.likes = new Likes()
+  const currentID = state.recipe.id
+
+  // user HAS NOT yet liked the current recipe
+  if (!state.likes.isLiked(currentID)) {
+    // add like to the state
+    const newLike = state.likes.addLike(
+      currentID,
+      state.recipe.title,
+      state.recipe.author,
+      state.recipe.img
+    )
+    // toggle like button
+    likeView.toggleLikeBtn(true)
+    // add recipe to UI list
+    likeView.renderLike(newLike)
+  // user HAS liked the current recipe
+  } else {
+    // remove like to the state
+    state.likes.deleteLike(currentID)
+    // toggle like button
+    likeView.toggleLikeBtn(false)
+    // remove recipe to UI list
+    likeView.deleteLike(currentID)
+  }
+  likeView.toggleLikeMenu(state.likes.getNumLikes())
+}
+
 // use event delegation on the +/- buttons because the element don't exist yet
 // check the target of the click event
 elements.recipe.addEventListener('click', e => {
@@ -150,7 +190,10 @@ elements.recipe.addEventListener('click', e => {
     state.recipe.updateServings('inc')
     recipeView.updateServingsIngredients(state.recipe)
   } else if (e.target.matches('.recipe__btn--add, .recipe__btn--add *')) {
+    // add ingredients to the shopping list
     controlList()
+  } else if (e.target.matches('.recipe__love, .recipe__love *')) {
+    controlLike()
   }
 })
 
