@@ -18,7 +18,6 @@ import * as likeView from './views/likeView'
 * - liked recipes object
 */
 let state = {}
-window.state = state
 
 // ******************
 // SEARCH CONTROLLER
@@ -143,8 +142,6 @@ elements.shopping.addEventListener('click', e => {
 // ******************
 // LIKE CONTROLLER
 // ******************
-// TESTING
-state.likes = new Likes()
 
 const controlLike = () => {
   if (!state.likes) state.likes = new Likes()
@@ -197,5 +194,14 @@ elements.recipe.addEventListener('click', e => {
   }
 })
 
-// TESTING
-window.l = new List()
+// restore liked recipes from localStorage on load
+window.addEventListener('load', () => {
+  // create a new likes object
+  state.likes = new Likes()
+  // fill the likes object with localStorage
+  state.likes.readStorage()
+  // toggle likes button
+  likeView.toggleLikeMenu(state.likes.getNumLikes())
+  // render the existing liked recipe
+  state.likes.likes.forEach(like => likeView.renderLike(like))
+})
