@@ -27,7 +27,7 @@ export default class Likes {
   // localStorage use (key, strings)
   persistData () {
     // transform the array to a string with JSON.stringify
-    localStorage.set('likes', JSON.stringify(this.likes))
+    localStorage.setItem('likes', JSON.stringify(this.likes))
   }
   // method to retrieve the datas from localStorage
   readStorage () {
